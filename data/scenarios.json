@@ -1,0 +1,74 @@
+[
+  {
+    "id": "web_port_unreachable",
+    "name": "Web 服务端口不可达",
+    "question": "用户无法访问 HTTPS 网站，浏览器提示连接超时。",
+    "service_status": "nginx: inactive (dead); app-api: active (running)",
+    "network_summary": "443/tcp 未监听；安全组允许 443/tcp 入站。",
+    "configuration_summary": "Nginx 配置文件存在，最近一次部署后服务未成功启动。",
+    "logs": "nginx[1820]: bind() to 0.0.0.0:443 failed (98: Address already in use)"
+  },
+  {
+    "id": "disk_full",
+    "name": "磁盘空间耗尽",
+    "question": "应用写入日志失败，接口持续返回 500。",
+    "service_status": "app-api: active (running); logrotate: active (exited)",
+    "network_summary": "网络连通正常。",
+    "configuration_summary": "/var 分区使用率 100%，日志轮转策略未清理历史压缩包。",
+    "logs": "OSError: [Errno 28] No space left on device"
+  },
+  {
+    "id": "dns_failure",
+    "name": "DNS 解析失败",
+    "question": "应用无法连接外部支付服务，提示域名不存在。",
+    "service_status": "app-api: active (running)",
+    "network_summary": "到 DNS 地址 10.0.0.2 的 UDP/53 超时。",
+    "configuration_summary": "/etc/resolv.conf 指向已下线的内部 DNS。",
+    "logs": "Temporary failure in name resolution"
+  },
+  {
+    "id": "cpu_spike",
+    "name": "CPU 持续过高",
+    "question": "服务器响应变慢，CPU 使用率长期接近 100%。",
+    "service_status": "app-api: active (running); worker: active (running)",
+    "network_summary": "网络延迟正常。",
+    "configuration_summary": "worker 并发数配置为 CPU 核数的 8 倍。",
+    "logs": "worker queue backlog=18342; process cpu=97%"
+  },
+  {
+    "id": "nginx_config_error",
+    "name": "Nginx 配置错误",
+    "question": "发布后网站返回 502，Nginx 重新加载失败。",
+    "service_status": "nginx: failed (Result: exit-code); app-api: active (running)",
+    "network_summary": "80/tcp 与 443/tcp 安全组规则正常。",
+    "configuration_summary": "Nginx 新增的 upstream 配置缺少分号，最近一次配置校验失败。",
+    "logs": "nginx: [emerg] unexpected end of file, expecting ';' in /etc/nginx/conf.d/api.conf:18"
+  },
+  {
+    "id": "app_service_crash",
+    "name": "应用服务异常退出",
+    "question": "接口间歇性返回 503，应用服务不断重启。",
+    "service_status": "app-api: activating (auto-restart); nginx: active (running)",
+    "network_summary": "负载均衡到应用服务器的网络连通正常。",
+    "configuration_summary": "应用服务内存上限为 512MB，近期发布后请求量增加。",
+    "logs": "app-api: fatal error: runtime: out of memory; systemd: Scheduled restart job"
+  },
+  {
+    "id": "network_latency",
+    "name": "网络延迟升高",
+    "question": "跨可用区调用变慢，接口 P99 延迟明显升高。",
+    "service_status": "app-api: active (running); worker: active (running)",
+    "network_summary": "到 10.2.4.18 的平均延迟 186ms，丢包率 4.8%。",
+    "configuration_summary": "业务流量在高峰期接近当前网络带宽上限。",
+    "logs": "upstream request timeout; retrying connection to 10.2.4.18"
+  },
+  {
+    "id": "tls_certificate_expired",
+    "name": "HTTPS 证书过期",
+    "question": "用户访问 HTTPS 网站时提示证书已过期。",
+    "service_status": "nginx: active (running)",
+    "network_summary": "443/tcp 正常监听，外网连通正常。",
+    "configuration_summary": "站点证书有效期已于昨天结束，自动续期任务最近一次执行失败。",
+    "logs": "SSL certificate verify error: certificate has expired"
+  }
+]
